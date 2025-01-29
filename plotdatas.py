@@ -15,6 +15,9 @@ acc_data = data.iloc[:, 0:3].values
 gyro_data = data.iloc[:, 3:6].values
 mag_data = data.iloc[:, 6:9].values
 
+#magはどうやら16で割ればいいらしい
+mag_data = mag_data / 16
+
 # 時間ステップの計算
 time_steps = np.arange(len(acc_data)) / sampling_frequency
 
@@ -50,7 +53,7 @@ for i in range(len(time_steps)):
 
 # 修正された加速度データのプロット
 plt.figure(figsize=(12, 6))
-plt.subplot(3, 1, 1)
+plt.subplot(4, 1, 1)
 plt.plot(time_steps, corrected_acc_data[:, 0], label='Acc X (corrected)')
 plt.plot(time_steps, corrected_acc_data[:, 1], label='Acc Y (corrected)')
 plt.plot(time_steps, corrected_acc_data[:, 2], label='Acc Z (corrected)')
@@ -61,7 +64,7 @@ plt.legend()
 plt.grid()
 
 # 角速度データのプロット
-plt.subplot(3, 1, 2)
+plt.subplot(4, 1, 2)
 plt.plot(time_steps, gyro_data[:, 0], label='Gyro X')
 plt.plot(time_steps, gyro_data[:, 1], label='Gyro Y')
 plt.plot(time_steps, gyro_data[:, 2], label='Gyro Z')
@@ -72,13 +75,21 @@ plt.legend()
 plt.grid()
 
 # 地磁気データのプロット
-plt.subplot(3, 1, 3)
+plt.subplot(4, 1, 3)
 plt.plot(time_steps, mag_data[:, 0], label='Mag X')
 plt.plot(time_steps, mag_data[:, 1], label='Mag Y')
 plt.plot(time_steps, mag_data[:, 2], label='Mag Z')
 plt.title('Magnetometer Data')
 plt.xlabel('Time [s]')
 plt.ylabel('Magnetic Field [µT]')
+plt.legend()
+plt.grid()
+
+plt.subplot(4, 1, 4)
+plt.plot(time_steps, np.sqrt(mag_data[:, 0] ** 2 + mag_data[:, 1] ** 2 + mag_data[:, 2] ** 2), label = "Mag_norm")
+plt.title('Magnetometer Data')
+plt.xlabel('Time [s]')
+plt.ylabel('Magnetic Field Norm [µT]')
 plt.legend()
 plt.grid()
 
